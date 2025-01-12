@@ -1,0 +1,47 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Supervised ML algorithms in tourism analysis}
+\author{Loghin Cătălin}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+This project focuses on analyzing a tourism dataset, sourced from the Kaggle repository
+(\url{https://www.kaggle.com/datasets/umeradnaan/tourism-dataset}), to determine which of the six
+activity categories (\textit{Nature, Historical, Cultural, Beach, Adventure, Urban}) offers the highest
+profit potential in a given country. By employing various supervised learning algorithms---namely
+\textit{ID3 Trees, Na\"{i}ve Bayes, Optimal Bayes, Linear Regression, AdaBoost Trees}, and \textit{k-Nearest Neighbors (kNN)}---we aim
+to build a model that generates a ranking of these categories based on indicators such as
+\textit{Visitors}, \textit{Rating}, and \textit{Revenue}.
+
+To achieve this goal, we propose the following structure for this report:
+\begin{itemize}
+    \item \textbf{Data Understanding and Exploration}:
+          We describe the attributes in the dataset and analyze their correlations to gain insights.
+    \item \textbf{Methodology and Model Selection}:
+          We discuss the rationale behind the choice of the above supervised learning algorithms
+          and outline how we build the ranking model.
+    \item \textbf{Experimental Results}:
+          We present our experiments, including hyperparameter tuning and performance evaluation
+          of the candidate algorithms.
+    \item \textbf{Conclusions}:
+          We summarize the findings of our study, highlighting the most effective model for the given task.
+\end{itemize}
+
+The aim of this project is purely educational.
+
+\end{document}
