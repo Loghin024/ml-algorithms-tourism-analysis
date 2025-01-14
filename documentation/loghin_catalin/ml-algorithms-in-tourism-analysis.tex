@@ -29,7 +29,7 @@ To achieve this goal, we propose the following structure for this report:
     \item \textbf{Data Understanding and Exploration}:
           We describe the attributes in the dataset and analyze their correlations to gain insights.
 
-    \item \textbf{Experimental Results}:
+    \item \textbf{Experimental results and theoretical analysis}:
           We present our experiments, including chosen algorithms and optimizations applied.
     \item \textbf{Conclusions}:
           We summarize the findings of our study, highlighting the most effective model for the given task.
@@ -123,10 +123,10 @@ The correlation analysis further guides the task by identifying the lack of dire
 \end{figure}
 
 \newpage
-\section{Experimental Results}
+\section{Experimental results and theoretical analysis}
 
 
-In this section, we evaluate the performance of various supervised machine learning algorithms applied to the tourism dataset. The goal is to determine the most effective approach for predicting the profitability of tourism activity categories based on the dataset's attributes. The algorithms tested include \textit{ID3 Trees, Na\"{i}ve Bayes, Optimal Bayes, k-Nearest Neighbors (kNN), Linear Regression}, and \textit{AdaBoost}. Each algorithm is assessed based on its ability to generate accurate predictions, with results compared across different countries and experimental configurations.
+In this section, we evaluate and analyse the performance of various supervised machine learning algorithms applied to the tourism dataset. The goal is to determine the most effective approach for predicting the profitability of tourism activity categories based on the dataset's attributes. The algorithms tested include \textit{ID3 Trees, Na\"{i}ve Bayes, k-Nearest Neighbors (kNN), Linear Regression}, and \textit{AdaBoost}. Each algorithm is assessed based on its ability to generate accurate predictions, with results compared across different countries and experimental configurations.
 
 \subsection{Results for Na\"{i}ve Bayes}
 
@@ -137,6 +137,9 @@ To begin, we present the results of experiments conducted using the \textit{Na\"
 \end{itemize}
 
 The target variable for our analysis was the \textit{Category} of tourism activities, which was encoded for use in the classification model. The dataset was filtered for each country individually and  was split into an 80\%-20\% training and testing ratio, with the training set used to fit the \textit{Na\"{i}ve Bayes} model and the testing set employed to evaluate its accuracy. The dataset was split in such a way so every category to be found in both datasets in the given proportions. 80-20 report was selected in order to have balanced datasets, otherwise the test set could have different proportion for category entries, they even can miss some categories depending on how the data was splitted.
+
+For revenue calculation, the predicted categories obtained from the \textit{Na\"{i}ve Bayes} model were first converted back to their original labels using the inverse transform of the \textit{LabelEncoder}. The corresponding \textit{Revenue} values for the test dataset were then assigned by matching the indices of the test data with the original dataset. This allowed each predicted category to be associated with its actual revenue value from the dataset. The revenue values were subsequently grouped by the predicted categories, and the average revenue for each category was computed. This average revenue served as a basis for ranking the categories, with higher average revenue indicating a higher rank.
+
 
 
 Table~\ref{tab:naive_bayes_results} summarizes the accuracy of the \textit{Na\"{i}ve Bayes} model across the seven countries in the dataset for both approaches.
@@ -159,6 +162,92 @@ Table~\ref{tab:naive_bayes_results} summarizes the accuracy of the \textit{Na\"{
 \end{table}
 
 The results indicate that the second approach, which includes engineered features, consistently outperforms the first approach. This improvement is attributed to the inclusion of additional features, which provide more informative inputs for the classifier, adding an attribute that correlates 2, helps in this case. However, the overall accuracy remains relatively low, reflecting the limitations of the \textit{Na\"{i}ve Bayes} algorithm in handling datasets where attributes are not truly independent.
+
+\subsection{Optimal Bayes}
+The \textit{Optimal Bayes Classifier} represents the theoretical upper bound of classification performance, as it relies on the true posterior probabilities of the target classes. However, in practice, it cannot be directly applied because the true distributions of the data are generally unknown. Accurately estimating these probabilities is challenging, particularly when the data exhibits high dimensionality, complex relationships, or limited sample sizes.
+
+\subsection{k-Nearest Neighbors (kNN)}
+
+To analyze the dataset and predict revenue rankings among tourism categories, the \textit{k-Nearest Neighbors (kNN)} algorithm was employed. The implementation included preprocessing, hyperparameter tuning, and evaluation to achieve optimal results. Below, we outline the steps undertaken:
+
+\subsubsection{Data Preprocessing}
+
+The dataset was filtered by country to ensure predictions were specific to each region. The following preprocessing steps were applied:
+\begin{itemize}
+    \item \textbf{Categorical Encoding:} The categorical variables \textit{Category} and \textit{Accommodation Available} were encoded into numerical values using \textit{LabelEncoder}.
+    \item \textbf{Feature Selection:} The features used for prediction included \textit{Visitors}, \textit{Rating}, and the encoded \textit{Accommodation Available}. The target variable was \textit{Revenue}.
+    \item \textbf{Feature Scaling:} All numerical features were standardized using \textit{StandardScaler} to ensure equal importance in distance calculations during the kNN process.
+\end{itemize}
+
+\subsubsection{Hyperparameter Tuning}
+
+To optimize the kNN model, a grid search was conducted over the following hyperparameters:
+\begin{itemize}
+    \item \textbf{Number of Neighbors (\textit{k}):} Values ranging from 1 to 20 were tested to find the optimal number of neighbors.
+    \item \textbf{Weighting Scheme:} Both \textit{uniform} weighting (equal importance for all neighbors) and \textit{distance} weighting (closer neighbors have greater influence) were evaluated.
+    \item \textbf{Distance Metric:} Three distance metrics (\textit{Euclidean}, \textit{Manhattan}, and \textit{Minkowski}) were considered to identify the most suitable measure for the data.
+\end{itemize}
+
+The grid search was implemented using \textit{GridSearchCV} with 5-fold cross-validation. The performance of each parameter combination was assessed using the \textit{R²} score, and the best-performing model was selected.
+
+\subsubsection{Data Splitting and Evaluation}
+
+The dataset for each country was split into training and test sets using an 80\%-20\% ratio. The training set was used to tune the hyperparameters, while the test set was used to evaluate the final model's performance. The evaluation metrics included:
+\begin{itemize}
+    \item \textbf{Mean Absolute Error (MAE):} The average absolute difference between predicted and actual revenue values.
+    \item \textbf{Mean Squared Error (MSE):} The average squared difference between predicted and actual revenue values, penalizing larger errors more heavily.
+    \item \textbf{R² Score:} The proportion of variance in the target variable explained by the model.
+\end{itemize}
+
+\subsubsection{Results}
+
+The kNN model was successfully tuned and evaluated for each country. The best combination of hyperparameters and the resulting evaluation metrics provided insights into the model's performance and its ability to rank tourism categories effectively by revenue. Below are the detailed results for each country:
+
+\begin{itemize}
+    \item \textbf{India:}
+    Best Parameters: \{\texttt{metric}: \texttt{manhattan}, \texttt{n\_neighbors}: 20, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 250,002.99 \\
+    Mean Squared Error (MSE): 84,212,093,157.66 \\
+    R² Score: -0.07 \\
+
+    \item \textbf{USA:}
+    Best Parameters: \{\texttt{metric}: \texttt{euclidean}, \texttt{n\_neighbors}: 20, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 266,012.43 \\
+    Mean Squared Error (MSE): 92,470,942,379.95 \\
+    R² Score: -0.03 \\
+
+    \item \textbf{Brazil:}
+    Best Parameters: \{\texttt{metric}: \texttt{euclidean}, \texttt{n\_neighbors}: 18, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 248,417.03 \\
+    Mean Squared Error (MSE): 85,347,637,019.66 \\
+    R² Score: 0.01 \\
+
+    \item \textbf{France:}
+    Best Parameters: \{\texttt{metric}: \texttt{manhattan}, \texttt{n\_neighbors}: 20, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 243,704.18 \\
+    Mean Squared Error (MSE): 80,476,138,214.68 \\
+    R² Score: 0.01 \\
+
+    \item \textbf{Egypt:}
+    Best Parameters: \{\texttt{metric}: \texttt{manhattan}, \texttt{n\_neighbors}: 17, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 238,704.22 \\
+    Mean Squared Error (MSE): 79,403,452,509.68 \\
+    R² Score: -0.02 \\
+
+    \item \textbf{China:}
+    Best Parameters: \{\texttt{metric}: \texttt{euclidean}, \texttt{n\_neighbors}: 20, \texttt{weights}: \texttt{distance}\} \\
+    Mean Absolute Error (MAE): 257,102.73 \\
+    Mean Squared Error (MSE): 89,774,913,666.07 \\
+    R² Score: -0.08 \\
+
+    \item \textbf{Australia:}
+    Best Parameters: \{\texttt{metric}: \texttt{manhattan}, \texttt{n\_neighbors}: 20, \texttt{weights}: \texttt{uniform}\} \\
+    Mean Absolute Error (MAE): 247,923.57 \\
+    Mean Squared Error (MSE): 84,585,949,807.37 \\
+    R² Score: -0.08 \\
+\end{itemize}
+
+Overall, while the tuning process identified the optimal hyperparameters for each country, the evaluation metrics indicate challenges in accurately predicting revenue using the kNN model. The low and negative R² scores highlight the limitations of the model, possibly due to the inherent complexity of the dataset or lack of strong feature-target relationships.
 
 
 
