@@ -71,8 +71,8 @@ def main(file_path, country):
     print(f"Model Accuracy for {country}: {accuracy * 100:.2f}%")
 
     revenue_hierarchy = calculate_revenue_hierarchy(test_data, country_data, le_category)
-    # print("\nRevenue Hierarchy:")
-    # print(revenue_hierarchy)
+    print("\nRevenue Hierarchy:")
+    print(revenue_hierarchy)
 
 
 if __name__ == "__main__":
