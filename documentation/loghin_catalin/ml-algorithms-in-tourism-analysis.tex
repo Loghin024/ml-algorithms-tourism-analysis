@@ -136,6 +136,9 @@ To begin, we present the results of experiments conducted using the \textit{Na\"
     \item In the \textbf{second approach}, three additional engineered features were included: \textit{Revenue per Visitor(provides an indicator of how much revenue is generated on average per visitor), Log of Visitors(reduces the skewness of the Visitors data, especially if there are activities with very large or very small visitor counts. It helps stabilize variance and improves the performance)}, and \textit{Log of Revenue(reduces the impact of large outliers in the Revenue attribute, enabling the algorithm to better handle data with large ranges)}.
 \end{itemize}
 
+The target variable for our analysis was the \textit{Category} of tourism activities, which was encoded for use in the classification model. The dataset was filtered for each country individually and  was split into an 80\%-20\% training and testing ratio, with the training set used to fit the \textit{Na\"{i}ve Bayes} model and the testing set employed to evaluate its accuracy. The dataset was split in such a way so every category to be found in both datasets in the given proportions. 80-20 report was selected in order to have balanced datasets, otherwise the test set could have different proportion for category entries, they even can miss some categories depending on how the data was splitted.
+
+
 Table~\ref{tab:naive_bayes_results} summarizes the accuracy of the \textit{Na\"{i}ve Bayes} model across the seven countries in the dataset for both approaches.
 
 \begin{table}[h!]
