@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 
 df = pd.read_csv("../data/tourism_dataset.csv")
 
@@ -87,4 +88,31 @@ plt.yticks(fontsize=12)
 plt.grid(True, linestyle='--', alpha=0.6)
 plt.legend(title='Category', title_fontsize=12, fontsize=10)
 plt.tight_layout()
+plt.show()
+
+
+# Comparison of ID3 Approaches: Baseline vs. Enhanced
+countries = ['India', 'USA', 'Brazil', 'France', 'Egypt', 'China', 'Australia']
+baseline_accuracy = [15.00, 15.88, 18.45, 11.63, 21.31, 16.05, 18.67]
+enhanced_accuracy = [20.56, 25.29, 22.62, 20.35, 20.22, 21.60, 24.70]
+
+x = np.arange(len(countries))
+width = 0.35
+
+# Create bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(x - width/2, baseline_accuracy, width, label='Baseline Approach', color='blue')
+plt.bar(x + width/2, enhanced_accuracy, width, label='Enhanced Approach', color='orange')
+
+# Add labels, title, and legend
+plt.xticks(x, countries)
+plt.xlabel('Country')
+plt.ylabel('Accuracy (%)')
+plt.title('Comparison of ID3 Approaches: Baseline vs. Enhanced')
+plt.legend()
+
+# Show grid and save image
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig('id3_accuracy_comparison.jpg')
 plt.show()
