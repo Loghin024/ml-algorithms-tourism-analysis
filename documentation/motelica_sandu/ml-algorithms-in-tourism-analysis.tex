@@ -476,4 +476,110 @@ Australia & Logarithmic & Urban, Historical, Cultural, Beach, Adventure, Nature 
 
 Linear regression provided valuable insights when combined with proper preprocessing. The results underline the importance of transforming target variables to improve model performance and interpretability.
 
+
+\subsection{AdaBoost}
+
+This subsection evaluates the performance of the \textit{AdaBoost} algorithm in predicting the most profitable tourism activity categories. Two approaches were employed:
+\begin{enumerate}
+    \item A custom implementation of AdaBoost.
+    \item The \textit{AdaBoostClassifier} from the \textit{scikit-learn} library.
+\end{enumerate}
+Both methods were tested across seven countries, and their results were compared in terms of accuracy and revenue hierarchy.
+
+\subsubsection{Data Preprocessing}
+
+For both approaches, the dataset was filtered for each country, and the following preprocessing steps were applied:
+\begin{itemize}
+    \item \textbf{Feature Engineering:}
+    \begin{itemize}
+        \item \textit{Log\_Visitors}: Logarithmic transformation of the \textit{Visitors} attribute to reduce skewness.
+        \item \textit{Revenue\_per\_Visitor}: Captures the average revenue generated per visitor.
+    \end{itemize}
+    \item \textbf{Label Encoding:} The target variable (\textit{Category}) was encoded using \textit{LabelEncoder}.
+    \item \textbf{Train-Test Split:} The dataset was split into training (80\%) and testing (20\%) sets using stratified sampling to ensure balanced representation across all categories.
+\end{itemize}
+
+\subsubsection{Experimental Setup}
+
+Both approaches used a base \textit{DecisionTreeClassifier} with a maximum depth of 1 (a decision stump) as the weak learner. The number of estimators (\textit{n\_estimators}) was set to 50 for comparability. The models were trained and tested using the same data splits for consistency.
+
+\subsubsection{Results for Sklearn AdaBoost}
+
+The \textit{AdaBoostClassifier} from \textit{scikit-learn} was trained on the preprocessed dataset. Table~\ref{tab:sklearn_adaboost_results} summarizes the accuracy and revenue hierarchy for each country.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Country} & \textbf{Accuracy (\%)} & \textbf{Revenue Hierarchy} \\ \hline
+India & 17.22 & Cultural, Adventure, Beach \\
+USA & 19.41 & Cultural, Beach, Adventure, Historical, Urban, Nature \\
+Brazil & 17.86 & Cultural, Adventure, Urban, Beach, Historical, Nature \\
+France & 19.77 & Cultural, Urban, Adventure, Nature, Beach \\
+Egypt & 11.48 & Nature, Adventure, Beach, Urban, Cultural \\
+China & 16.05 & Nature, Cultural, Urban, Historical, Beach, Adventure \\
+Australia & 19.88 & Nature, Historical, Beach, Cultural, Adventure \\ \hline
+\end{tabular}
+\caption{Sklearn AdaBoost Results: Accuracy and Revenue Hierarchy by Country}
+\label{tab:sklearn_adaboost_results}
+\end{table}
+
+\subsubsection{Results for Custom AdaBoost Implementation}
+
+A custom implementation of AdaBoost was also applied to the same dataset. Table~\ref{tab:custom_adaboost_results} presents the results for each country.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Country} & \textbf{Accuracy (\%)} & \textbf{Revenue Hierarchy} \\ \hline
+India & 16.11 & Beach, Cultural, Nature, Adventure, Urban, Historical \\
+USA & 20.00 & Adventure, Cultural, Urban, Beach, Nature, Historical \\
+Brazil & 16.07 & Urban, Adventure, Historical, Cultural, Beach, Nature \\
+France & 19.19 & Beach, Nature, Urban, Historical, Cultural, Adventure \\
+Egypt & 18.03 & Beach, Nature, Historical, Urban, Cultural, Adventure \\
+China & 15.43 & Cultural, Beach, Nature, Urban, Adventure, Historical \\
+Australia & 18.07 & Beach, Adventure, Historical, Nature, Urban, Cultural \\ \hline
+\end{tabular}
+\caption{Custom AdaBoost Results: Accuracy and Revenue Hierarchy by Country}
+\label{tab:custom_adaboost_results}
+\end{table}
+
+\subsubsection{Discussion}
+
+\begin{itemize}
+    \item \textbf{Accuracy:} The \textit{AdaBoostClassifier} from \textit{scikit-learn} slightly outperformed the custom implementation in most cases. For example, in the USA, the accuracy for the \textit{scikit-learn} implementation was 19.41\%, compared to 20.00\% for the custom implementation.
+    \item \textbf{Revenue Hierarchy:} Both implementations produced consistent revenue hierarchies, highlighting the categories with higher profitability, such as \textit{Cultural}, \textit{Beach}, and \textit{Adventure}. Minor differences in rankings were observed between the two methods due to variations in weight updates for misclassified instances.
+    \item \textbf{Insights:} The results suggest that \textit{Cultural} and \textit{Beach} activities consistently rank high in profitability across most countries. The \textit{Adventure} category also emerged as a top performer in several countries, indicating its appeal to niche markets.
+\end{itemize}
+
+\subsubsection{Conclusion}
+
+The \textit{AdaBoost} algorithm, in both its custom and \textit{scikit-learn} implementations, provided moderate performance, but it did not outperform the \textit{ID3 Decision Tree} model in terms of accuracy. While AdaBoost has the advantage of iteratively refining weak learners, the dataset's complexity and lack of strong feature-target relationships may have limited its effectiveness.
+
+Both implementations produced revenue hierarchies that aligned well with observed trends, emphasizing the profitability of \textit{Cultural}, \textit{Beach}, and \textit{Adventure} categories across most countries. However, the lower accuracy scores compared to \textit{ID3} suggest that the iterative boosting process was unable to compensate for the dataset's inherent challenges.
+
+
+\section{Conclusion}
+
+This study analyzed the performance of various supervised machine learning algorithms for predicting the profitability of tourism activity categories across seven countries. The evaluated models included \textit{ID3 Decision Trees}, \textit{Na\"{i}ve Bayes}, \textit{k-Nearest Neighbors (kNN)}, \textit{Logistic Regression}, \textit{Linear Regression}, and \textit{AdaBoost} (both \textit{scikit-learn} and custom implementations).
+
+\subsection{Summary of Results}
+
+\begin{itemize}
+    \item \textbf{ID3 Decision Trees:} The \textit{ID3 Decision Tree} algorithm outperformed most other models, achieving the highest accuracy in multiple countries (e.g., 25.29\% in the USA and 24.70\% in Australia). Enhanced feature engineering, such as discretization, contributed to improved results.
+    \item \textbf{Na\"{i}ve Bayes:} Despite its simplicity, the \textit{Na\"{i}ve Bayes} classifier provided moderate accuracy but was consistently outperformed by more advanced models. For example, its accuracy in India (17.22\%) was lower than that of \textit{ID3}.
+    \item \textbf{k-Nearest Neighbors (kNN):} The kNN model struggled to deliver meaningful predictions, with negative R² scores in most cases. Its limitations highlight the importance of feature-target relationships and the challenges of using distance-based models in high-dimensional data.
+    \item \textbf{Logistic Regression:} This model offered a modest baseline, with accuracies ranging from 12.78\% (India) to 19.88\% (Australia). While it effectively captured linear patterns, it failed to account for the complex, non-linear relationships present in the dataset.
+    \item \textbf{Linear Regression:} The performance of \textit{Linear Regression} was generally poor, with several negative R² scores. Transforming features and target variables (e.g., logarithmic transformations) improved results but did not yield competitive accuracy.
+    \item \textbf{AdaBoost:} The \textit{AdaBoost} algorithm, in both \textit{scikit-learn} and custom implementations, showed moderate performance but did not outperform \textit{ID3}. The \textit{scikit-learn} implementation achieved slightly higher accuracy (e.g., 19.41\% in the USA and 19.88\% in Australia) than the custom version, but both models faced challenges in effectively handling the dataset's complexity.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{comparison_of_algorithms_across_countries.png}
+    \caption{Comparison of Algorithm Accuracies Across Countries}
+    \label{fig:algorithm_comparison}
+\end{figure}
+
 \end{document}
