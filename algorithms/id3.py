@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 import numpy as np
 
 
@@ -45,13 +45,12 @@ def train_and_evaluate_id3(data):
     y_pred = model.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred)
 
     test_data = X_test.copy()
     test_data['Category_pred'] = y_pred
     test_data['Actual'] = y_test.reset_index(drop=True)
 
-    return model, test_data, accuracy, report
+    return model, test_data, accuracy
 
 
 def optimize_discretization(data, country, max_q=10):
@@ -66,7 +65,7 @@ def optimize_discretization(data, country, max_q=10):
         for q_revenue in range(2, max_q + 1):
             processed_data, _ = preprocess_data_for_id3(data, country, q_visitors, q_revenue)
 
-            _, _, accuracy, _ = train_and_evaluate_id3(processed_data)
+            _, _, accuracy = train_and_evaluate_id3(processed_data)
 
             if accuracy > best_accuracy:
                 best_accuracy = accuracy
@@ -102,7 +101,7 @@ def main(file_path):
         print(f"Best q for Visitors_Bins: {best_params[0]}, Revenue_Bins: {best_params[1]}")
 
         processed_data, le_category = preprocess_data_for_id3(data, country, best_params[0], best_params[1])
-        model, test_data, accuracy, report = train_and_evaluate_id3(processed_data)
+        model, test_data, accuracy = train_and_evaluate_id3(processed_data)
 
         print(f"Accuracy for {country}: {accuracy * 100:.2f}%")
 

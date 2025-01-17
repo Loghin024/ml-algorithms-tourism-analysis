@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
@@ -12,15 +12,13 @@ def preprocess_data_for_linear_regression(data, country):
     """
     country_data = data[data['Country'] == country].reset_index(drop=True)
 
-    country_data['Revenue_per_Visitor'] = country_data['Revenue'] / country_data['Visitors']
+    # country_data['Revenue_per_Visitor'] = country_data['Revenue'] / country_data['Visitors']
     country_data['Log_Visitors'] = np.log1p(country_data['Visitors'])
     country_data['Log_Revenue'] = np.log1p(country_data['Revenue'])
 
 
     le_category = LabelEncoder()
-    le_accommodation = LabelEncoder()
     country_data['Category_encoded'] = le_category.fit_transform(country_data['Category'])
-    country_data['Accommodation_encoded'] = le_accommodation.fit_transform(country_data['Accommodation_Available'])
 
     return country_data, le_category
 
@@ -30,7 +28,7 @@ def train_and_evaluate_linear_regression(data):
     Trains and evaluates a linear regression model.
     """
 
-    features = data[['Log_Visitors', 'Rating', 'Accommodation_encoded', 'Log_Revenue']]
+    features = data[['Log_Visitors', 'Rating', 'Log_Revenue']]
     target = data['Revenue']
 
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
@@ -74,7 +72,7 @@ def main_linear_regression(file_path, country):
     print(f"R² Score: {r2:.2f}")
 
     # calculate revenue hierarchy
-    test_data = pd.DataFrame(X_test, columns=['Log_Visitors', 'Rating', 'Accommodation_encoded', 'Log_Revenue'])
+    test_data = pd.DataFrame(X_test, columns=['Log_Visitors', 'Rating', 'Log_Revenue'])
     revenue_hierarchy = calculate_revenue_hierarchy_linear(test_data, y_pred, country_data, le_category)
     print("\nRevenue Hierarchy:")
     print(revenue_hierarchy)
