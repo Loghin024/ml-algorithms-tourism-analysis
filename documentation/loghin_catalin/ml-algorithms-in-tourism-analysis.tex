@@ -567,5 +567,27 @@ The \textit{AdaBoost} algorithm, in both its custom and \textit{scikit-learn} im
 Both implementations produced revenue hierarchies that aligned well with observed trends, emphasizing the profitability of \textit{Cultural}, \textit{Beach}, and \textit{Adventure} categories across most countries. However, the lower accuracy scores compared to \textit{ID3} suggest that the iterative boosting process was unable to compensate for the dataset's inherent challenges.
 
 
+\section{Conclusion}
+
+This study analyzed the performance of various supervised machine learning algorithms for predicting the profitability of tourism activity categories across seven countries. The evaluated models included \textit{ID3 Decision Trees}, \textit{Na\"{i}ve Bayes}, \textit{k-Nearest Neighbors (kNN)}, \textit{Logistic Regression}, \textit{Linear Regression}, and \textit{AdaBoost} (both \textit{scikit-learn} and custom implementations).
+
+\subsection{Summary of Results}
+
+\begin{itemize}
+    \item \textbf{ID3 Decision Trees:} The \textit{ID3 Decision Tree} algorithm outperformed most other models, achieving the highest accuracy in multiple countries (e.g., 25.29\% in the USA and 24.70\% in Australia). Enhanced feature engineering, such as discretization, contributed to improved results.
+    \item \textbf{Na\"{i}ve Bayes:} Despite its simplicity, the \textit{Na\"{i}ve Bayes} classifier provided moderate accuracy but was consistently outperformed by more advanced models. For example, its accuracy in India (17.22\%) was lower than that of \textit{ID3}.
+    \item \textbf{k-Nearest Neighbors (kNN):} The kNN model struggled to deliver meaningful predictions, with negative R² scores in most cases. Its limitations highlight the importance of feature-target relationships and the challenges of using distance-based models in high-dimensional data.
+    \item \textbf{Logistic Regression:} This model offered a modest baseline, with accuracies ranging from 12.78\% (India) to 19.88\% (Australia). While it effectively captured linear patterns, it failed to account for the complex, non-linear relationships present in the dataset.
+    \item \textbf{Linear Regression:} The performance of \textit{Linear Regression} was generally poor, with several negative R² scores. Transforming features and target variables (e.g., logarithmic transformations) improved results but did not yield competitive accuracy.
+    \item \textbf{AdaBoost:} The \textit{AdaBoost} algorithm, in both \textit{scikit-learn} and custom implementations, showed moderate performance but did not outperform \textit{ID3}. The \textit{scikit-learn} implementation achieved slightly higher accuracy (e.g., 19.41\% in the USA and 19.88\% in Australia) than the custom version, but both models faced challenges in effectively handling the dataset's complexity.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{comparison_of_algorithms_across_countries.png}
+    \caption{Comparison of Algorithm Accuracies Across Countries}
+    \label{fig:algorithm_comparison}
+\end{figure}
+
 
 \end{document}
