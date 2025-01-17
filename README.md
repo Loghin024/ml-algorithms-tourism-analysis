@@ -1,4 +1,4 @@
-# Supervised Learning for Tourism Dataset: Revenue Maximization via Activity Ranking
+# Machine Learning Algorithms Tourism Analysis
 
 ## Overview
 This project evaluates supervised learning algorithms to optimize revenue in the tourism sector. Using the provided dataset, we rank six activity categories (`Nature`, `Historical`, `Cultural`, `Beach`, `Adventure`, `Urban`) to maximize revenue (`Revenue`) and/or revenue per visitor (`Revenue/Visitors`) for a country-specific context.
