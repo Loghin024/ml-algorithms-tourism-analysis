@@ -241,7 +241,7 @@ The kNN model was successfully tuned and evaluated for each country. The best co
 
 Overall, while the tuning process identified the optimal hyperparameters for each country, the evaluation metrics indicate challenges in accurately predicting revenue using the kNN model. The low and negative R² scores highlight the limitations of the model, possibly due to the inherent complexity of the dataset or lack of strong feature-target relationships.
 
-\subsection{ID3 Decision Tree Implementation}
+\subsection{ID3 Decision Tree}
 The \textit{ID3 Decision Tree} algorithm was employed to predict the most profitable activity categories. Two approaches were analyzed:
 \begin{enumerate}
     \item A \textbf{baseline approach} using raw numerical features without discretization or hyperparameter optimization.
@@ -327,8 +327,153 @@ Figure~\ref{fig:id3_comparison} illustrates the improvement in accuracy achieved
     \item Despite improvements, the accuracy of the ID3 model remained relatively low (20\%-25\%), suggesting that further enhancements, such as additional feature engineering or the use of ensemble methods, may be needed.
 \end{itemize}
 
-\subsubsection{Conclusion}
-The comparison between the baseline and enhanced approaches highlights the critical role of preprocessing in improving the performance of decision tree models. Discretization and hyperparameter tuning significantly improved accuracy and produced more reliable revenue hierarchies, making the enhanced approach preferable for this dataset.
 
+\subsection{Logistic Regression}
+
+The \textit{Logistic Regression} algorithm was applied to classify tourism activities based on profitability indicators. This section outlines the methodology, results, and insights derived from the analysis for the dataset filtered by country.
+
+\subsubsection{Data Preprocessing}
+For logistic regression, the dataset was filtered for each country, and the following features were engineered:
+\begin{itemize}
+    \item \textbf{Log\_Visitors:} The logarithmic transformation of the \textit{Visitors} attribute reduced skewness and stabilized variance, improving model robustness.
+    \item \textbf{Revenue\_per\_Visitor:} Captures the average revenue per visitor, a critical profitability metric.
+\end{itemize}
+
+Categorical variables were encoded using \textit{LabelEncoder}. The \textit{Accommodation\_encoded} attribute was excluded as it negatively impacted the model's performance for some countries and did not significantly improve outcomes elsewhere.
+
+\subsubsection{Experimental Setup}
+The dataset was split into training (80\%) and testing (20\%) sets using stratified sampling to ensure balanced category representation. Logistic regression models were trained with:
+\begin{itemize}
+    \item \textbf{Maximum Iterations:} 1000, ensuring convergence for complex datasets.
+    \item \textbf{Class Weights:} Balanced, to handle potential class imbalances.
+\end{itemize}
+
+\subsubsection{Results}
+Table~\ref{tab:logistic_regression_summary} summarizes the model's accuracy and revenue hierarchy for each country.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Country} & \textbf{Accuracy (\%)} & \textbf{Revenue Hierarchy} \\ \hline
+India & 12.78 & Historical, Nature, Urban, Adventure, Beach, Cultural \\ 
+USA & 17.65 & Beach, Urban, Nature, Cultural, Historical, Adventure \\ 
+Brazil & 15.48 & Nature, Historical, Urban, Cultural, Adventure, Beach \\ 
+France & 15.12 & Cultural, Historical, Beach, Nature, Urban, Adventure \\ 
+Egypt & 16.39 & Cultural, Urban, Nature, Beach, Historical, Adventure \\ 
+China & 13.58 & Nature, Adventure, Historical, Urban, Beach, Cultural \\ 
+Australia & 19.88 & Cultural, Nature, Beach, Adventure, Historical, Urban \\ \hline
+\end{tabular}
+\caption{Logistic Regression Results: Accuracy and Revenue Hierarchy by Country}
+\label{tab:logistic_regression_summary}
+\end{table}
+
+\subsubsection{Discussion}
+\begin{itemize}
+    \item \textbf{Accuracy:} The logistic regression model achieved modest accuracy across all countries, ranging from 12.78\% (India) to 19.88\% (Australia). These results indicate the challenges of predicting non-linear patterns in tourism data using logistic regression.
+    \item \textbf{Revenue Insights:} Revenue hierarchies are consistent with observed trends. Categories such as \textit{Nature} and \textit{Cultural}, often associated with high visitor appeal and profitability, rank high across multiple countries.
+\end{itemize}
+
+Logistic regression provided a baseline for category prediction but highlighted limitations in capturing complex relationships within the dataset. Advanced preprocessing techniques, exploring regularization and ensemble models may improve predictive accuracy and robustness.
+
+
+\subsection{Linear Regression}
+
+The \textit{Linear Regression} algorithm was applied to predict revenue from tourism activities using two different approaches. This section presents a comparative analysis of these approaches and discusses the results.
+
+\subsubsection{Approaches and Data Preprocessing}
+Two target variables were considered:
+
+1. \textbf{Revenue per Visitor:} The raw value without transformations.
+
+2. \textbf{Logarithmic Transformation:} Both \textit{Revenue per Visitor} and \textit{Revenue} were log-transformed to stabilize variance and reduce skewness.\\[8pt]
+\textbf{Features:}
+The features used in both approaches included:
+
+- \textit{Log\_Visitors}: Logarithmic transformation of the \textit{Visitors} attribute.
+
+- \textit{Rating}: Average visitor rating of the activity.
+
+- \textit{Revenue\_per\_Visitor} (first approach), \textit{Log\_Revenue} (second approach): Log-transformed revenue was used in the second approach.\\[6pt]
+Categorical variables were encoded using \textit{LabelEncoder}. The \textit{Accommodation\_encoded} feature was tested but found to have no significant impact on the results and was excluded for simplicity.
+
+\subsubsection{Experimental Setup}
+For both approaches the dataset was split into training (80\%) and testing (20\%) sets using random sampling.
+
+- The \textit{LinearRegression} model from \textit{scikit-learn} was used with default parameters.
+
+- Performance was evaluated using:
+\begin{itemize}
+\item
+\textbf{Mean Squared Error (MSE):} Measures the average squared difference between predicted and actual values.
+\item
+\textbf{Mean Absolute Error (MAE):} Reflects the average magnitude of errors in predictions. 
+\item
+\textbf{R² Score:} Indicates the proportion of variance explained by the model.
+\end{itemize}
+
+
+\subsubsection{Results}
+Table~\ref{tab:linear_regression_results} summarizes the performance metrics for both approaches.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Country} & \textbf{Approach} & \textbf{MSE} & \textbf{MAE} & \textbf{R² Score} \\ \hline
+India & Raw Target & 76,206,901,074.90 & 237,093.09 & 0.03 \\
+India & Logarithmic & 15,509,650,632.72 & 107,294.49 & 0.80 \\ \hline
+USA & Raw Target & 88,093,477,346.20 & 263,197.81 & 0.02 \\
+USA & Logarithmic & 17,228,350,729.42 & 107,402.43 & 0.81 \\ \hline
+Brazil & Raw Target & 101,855,018,435.86 & 250,376.61 & -0.19 \\
+Brazil & Logarithmic & 18,291,897,528.08 & 117,089.19 & 0.79 \\ \hline
+France & Raw Target & 77,217,808,110.36 & 234,029.54 & 0.05 \\
+France & Logarithmic & 19,997,909,614.63 & 118,922.17 & 0.75 \\ \hline
+Egypt & Raw Target & 72,694,740,257.28 & 229,132.12 & 0.07 \\
+Egypt & Logarithmic & 17,891,545,342.92 & 114,188.71 & 0.77 \\ \hline
+China & Raw Target & 84,509,720,663.52 & 250,117.50 & -0.02 \\
+China & Logarithmic & 26,184,791,887.73 & 126,223.58 & 0.69 \\ \hline
+Australia & Raw Target & 75,679,713,395.10 & 232,206.59 & 0.04 \\
+Australia & Logarithmic & 17,179,902,577.65 & 107,366.97 & 0.78 \\ \hline
+\end{tabular}
+\caption{Linear Regression Results: Raw vs Logarithmic Transformation}
+\label{tab:linear_regression_results}
+\end{table}
+
+\textbf{Revenue Hierarchy:}
+The revenue hierarchy for each country under both approaches is summarized in Table~\ref{tab:revenue_hierarchy}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Country} & \textbf{Approach} & \textbf{Revenue Hierarchy} \\ \hline
+India & Raw Target & Adventure, Urban, Nature, Cultural, Beach, Historical \\ 
+India & Logarithmic & Urban, Beach, Adventure, Cultural, Nature, Historical \\ \hline
+USA & Raw Target & Nature, Historical, Cultural, Beach, Adventure, Urban \\ 
+USA & Logarithmic & Urban, Cultural, Historical, Nature, Adventure, Beach \\ \hline
+Brazil & Raw Target & Historical, Adventure, Cultural, Urban, Beach, Nature \\ 
+Brazil & Logarithmic & Adventure, Cultural, Nature, Urban, Historical, Beach \\ \hline
+France & Raw Target & Beach, Urban, Historical, Nature, Cultural, Adventure \\ 
+France & Logarithmic & Adventure, Cultural, Urban, Historical, Nature, Beach \\ \hline
+Egypt & Raw Target & Cultural, Urban, Nature, Historical, Adventure, Beach \\ 
+Egypt & Logarithmic & Historical, Nature, Adventure, Urban, Beach, Cultural \\ \hline
+China & Raw Target & Adventure, Nature, Urban, Cultural, Beach, Historical \\ 
+China & Logarithmic & Beach, Nature, Historical, Urban, Cultural, Adventure \\ \hline
+Australia & Raw Target & Beach, Cultural, Nature, Historical, Adventure, Urban \\ 
+Australia & Logarithmic & Urban, Historical, Cultural, Beach, Adventure, Nature \\ \hline
+\end{tabular}
+\caption{Revenue Hierarchy: Raw vs Logarithmic Transformation}
+\label{tab:revenue_hierarchy}
+\end{table}
+
+\subsubsection{Discussion}
+\begin{itemize}
+    \item \textbf{Performance Improvement:} Logarithmic transformation significantly improved all metrics (MSE, MAE, R²). For example, in India, the R² score increased from 0.03 (raw target) to 0.80 (logarithmic).
+    \item \textbf{Revenue Hierarchy:} The hierarchy predictions with the logarithmic transformation are more consistent with expected trends, particularly emphasizing higher-performing categories like \textit{Urban}, \textit{Adventure}, and \textit{Cultural}.
+    \item \textbf{Target Variable:} Predictions using \textit{Log\_Revenue} outperformed those with \textit{Revenue\_per\_Visitor}, highlighting the latter’s limited robustness.
+\end{itemize}
+
+Linear regression provided valuable insights when combined with proper preprocessing. The results underline the importance of transforming target variables to improve model performance and interpretability.
 
 \end{document}
